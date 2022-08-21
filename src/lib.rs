@@ -40,11 +40,15 @@ impl wasm::traits::HttpContext for HelloWorld {
                 for (k, v) in encoded {
                     if k == "token" {
                         user_id = parse_jwt(v.to_string());
-                        info!("id = {}", user_id);
+                        if user_id.len() > 0 {
+                            info!("id = {}", user_id);
+                        }
                     }
                 }
             }
-        self.set_http_request_header("x-xxx-userid",Some(&format!("{}", user_id)));
+        if user_id.len() > 0 {
+            self.set_http_request_header("x-xxx-userid",Some(&format!("{}", user_id)));
+        }
         wasm::types::Action::Continue
     }
 }
